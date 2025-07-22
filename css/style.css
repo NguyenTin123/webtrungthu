@@ -224,6 +224,7 @@ a {
 /*----------------------------art---------------------------------*/
 
 
+
 /*----------------------------Header---------------------------------*/
 .header {
 	height: 184px;
@@ -1530,6 +1531,82 @@ a {
   left: -23px;
   background: url(../images/i_open_nav_right.png) no-repeat center center;
 }
+
+.thumb {
+  position: relative;
+  display: inline-block;
+}
+.top2,
+.top1, 
+.top3{
+	position: relative;
+	display: inline-block;
+}
+
+.info-hover {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fce8d5;
+  color: #b30000;
+  border: 2px solid #d08b2c;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 13px;
+  white-space: nowrap;     /* Cho phép xuống dòng */
+  max-width: 180px;        /* Giới hạn chiều rộng */
+  word-wrap: break-word;   /* Tự ngắt dòng nếu từ quá dài */
+  text-align: center;
+  display: none;
+  z-index: 99;
+}
+
+.infotop-hover {
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fce8d5;
+  color: #b30000;
+  border: 2px solid #d08b2c;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 13px;
+  white-space: nowrap;     /* Cho phép xuống dòng */
+  max-width: 180px;        /* Giới hạn chiều rộng */
+  word-wrap: break-word;   /* Tự ngắt dòng nếu từ quá dài */
+  text-align: center;
+  display: none;
+  z-index: 99;
+}
+.thumb:hover .info-hover {
+  display: block;
+}
+.top2:hover .infotop-hover,
+.top1:hover .infotop-hover,
+.top3:hover .infotop-hover {
+  display: block;
+}
+.shake-on-hover:hover {
+  animation: shakeX 0.6s ease-in-out infinite;
+}
+
+/* Keyframes rung ngang */
+@keyframes shakeX {
+  0%   { transform: translateX(0); }
+  15%  { transform: translateX(-4px); }
+  30%  { transform: translateX(4px); }
+  45%  { transform: translateX(-4px); }
+  60%  { transform: translateX(4px); }
+  75%  { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+
+
+
 /*----------------------------Menu Fixed right---------------------------------
 .frame-right {
 	position: fixed;
