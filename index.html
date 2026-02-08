@@ -408,7 +408,9 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: linear-gradient(to bottom, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            background: linear-gradient(to bottom, #0c0c0c 0%, #1a1a2e 30%, #8b0000 50%, #16213e 100%),
+                        radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 71, 87, 0.1) 0%, transparent 50%);
             z-index: 100000;
             justify-content: center;
             align-items: center;
@@ -425,11 +427,36 @@
                 radial-gradient(2px 2px at 150px 100px, #ffd700, transparent),
                 radial-gradient(3px 3px at 250px 150px, #fff, transparent),
                 radial-gradient(2px 2px at 350px 200px, #ffd700, transparent),
-                radial-gradient(20px 25px at 200px 300px, rgba(255, 215, 0, 0.15), transparent);
+                radial-gradient(4px 4px at 100px 200px, #ff4757, transparent),
+                radial-gradient(3px 3px at 300px 100px, #ff4757, transparent),
+                radial-gradient(20px 25px at 200px 300px, rgba(255, 215, 0, 0.15), transparent),
+                radial-gradient(15px 20px at 400px 150px, rgba(255, 71, 87, 0.1), transparent);
             background-repeat: repeat;
             background-size: 400px 400px;
             animation: twinkle 8s infinite ease-in-out;
-            opacity: 0.5;
+            opacity: 0.6;
+        }
+
+        .lantern {
+            position: absolute;
+            top: -10%;
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+            animation: fall linear infinite, sway ease-in-out infinite;
+            font-size: 2rem;
+            opacity: 0.8;
+        }
+
+        .red-envelope {
+            position: absolute;
+            top: -10%;
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+            animation: fall linear infinite, sway ease-in-out infinite;
+            font-size: 1.5rem;
+            opacity: 0.9;
         }
         @keyframes twinkle {
             0%, 100% { opacity: 0.7; transform: translateY(0) rotate(0deg); }
@@ -736,7 +763,7 @@
     </div>
 
     <div id="screen-main">
-        <div id="go-newyear">✨ Bấm xem món quà thứ 2❤️ 🎆</div>
+        <div id="go-newyear">✨Xem món quà thứ 2❤️🎆</div>
         <div class="balloon-row" id="balloon-row"></div>
         <div class="container" style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
             <div class="photo-grid">
@@ -1062,6 +1089,39 @@
             }
         ];
 
+        // ========= Tet effects for New Year =========
+        function createLanterns() {
+            const ny = document.getElementById('screen-newyear');
+            if (!ny) return;
+            const count = isMobile ? 10 : 20;
+            for (let i = 0; i < count; i++) {
+                const l = document.createElement('div');
+                l.className = 'lantern';
+                l.innerText = '🏮';
+                l.style.left = Math.random() * 100 + "vw";
+                l.style.animationDuration = (Math.random() * 5 + 5) + "s";
+                l.style.animationDelay = Math.random() * 5 + "s";
+                ny.appendChild(l);
+                setTimeout(() => l.remove(), 10000);
+            }
+        }
+
+        function createRedEnvelopes() {
+            const ny = document.getElementById('screen-newyear');
+            if (!ny) return;
+            const count = isMobile ? 8 : 15;
+            for (let i = 0; i < count; i++) {
+                const r = document.createElement('div');
+                r.className = 'red-envelope';
+                r.innerText = '🧧';
+                r.style.left = Math.random() * 100 + "vw";
+                r.style.animationDuration = (Math.random() * 6 + 6) + "s";
+                r.style.animationDelay = Math.random() * 5 + "s";
+                ny.appendChild(r);
+                setTimeout(() => r.remove(), 12000);
+            }
+        }
+
         // ========= New Year screen =========
         function startNewYearTypewriter() {
             const title = document.querySelector('.ny-title');
@@ -1069,7 +1129,7 @@
             const titleText = '🎆 Chúc Mừng Năm Mới 2026 🎆';
 
             const textContent =
-`Nhân dịp năm mới, chúc Thuý Anh cùng gia đình và những người thân yêu một năm mới
+`🌸🌸🌸Nhân dịp năm mới, chúc Thuý Anh cùng gia đình và những người thân yêu một năm mới
 
 An Khang Thịnh Vượng - Vạn Sự Như Ý - Tỷ Sự Như Mơ
 
@@ -1077,9 +1137,8 @@ Sức Khỏe Dồi Dào - Công Việc Thuận Lợi - Gia Đình Hưng Thịnh
 
 Gia Đình Luôn Ấm Áp - Hạnh Phúc - Tràn Ngập Tiếng Cười và Nhiều Điều May Mắn
 
-
 Chúc Thuý Anh luôn giữ được tinh thần tích cực, công việc thuận lợi và cuộc sống ngày càng viên mãn.
-Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đầu tốt đẹp cho Thuý Anh cùng với Gia Đình🌸`;
+Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đầu tốt đẹp cho Thuý Anh cùng với Gia Đình🌸🌸🌸`;
 
             typeWriter(title, titleText, 80, () => typeWriter(text, textContent, isMobile ? 28 : 40));
         }
@@ -1090,6 +1149,10 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
 
             ny.style.display = "flex";
             ny.style.opacity = "1";
+
+            // Add Tet effects
+            createLanterns();
+            createRedEnvelopes();
 
             // reset
             const title = document.querySelector('.ny-title');
