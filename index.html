@@ -659,7 +659,7 @@
             .avatar__title { font-size: 1.5rem; }
             .meaningful-text { font-size: 0.8rem; min-height: 120px; }
             .letter-balloon { width: 25px; height: 30px; font-size: 10px; }
-            .avatar__img { width: 60px; height: 60px; }
+            .avatar__img { width: 130px; height: 130px; }
             .glow-ring { width: 200px; height: 200px; }
             .sparkler-stick { height: 150px; }
             .falling-photo { width: 90px; height: 90px; }
@@ -1516,7 +1516,7 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
 
                         function startFloatingPhotos() {
                             let pIdx = 0;
-                            const max = isMobile ? 24 : 50;
+                            const max = isMobile ? 50 : 50;
                             const interval = setInterval(() => {
                                 if (pIdx > max) { clearInterval(interval); return; }
                                 const img = document.createElement('img');
@@ -1550,7 +1550,7 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                                     window.removeEventListener('resize', resizeHeartCanvas);
                                 }, 1200);
                             };
-                        }, 900);
+                        }, 80000);
                     });
                 };
             });
