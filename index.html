@@ -1033,12 +1033,12 @@
 
         // ========= Data =========
         const heartColors = [
-            'hsl(0, 100%, 70%)',
-            'hsl(60, 100%, 70%)',
-            'hsl(120, 100%, 70%)',
-            'hsl(180, 100%, 70%)',
-            'hsl(240, 100%, 70%)',
-            'hsl(300, 100%, 70%)'
+            'hsl(5, 85%, 60%)',     // đỏ cam
+            'hsl(45, 90%, 55%)',   // vàng đậm
+            'hsl(120, 65%, 45%)',  // xanh lá
+            'hsl(190, 75%, 50%)',  // xanh ngọc
+            'hsl(220, 80%, 60%)',  // xanh dương
+            'hsl(285, 70%, 55%)'   // tím
         ];
 
         const birthdayData = [
@@ -1309,7 +1309,7 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                         if (goNY) goNY.style.opacity = "1";
                     }, 15000);
                 }, 900);
-            }, isMobile ? 65000 : 65000);
+            }, isMobile ? 60000 : 60000);
         }
 
         // ========= Events =========
@@ -1550,7 +1550,7 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                                     window.removeEventListener('resize', resizeHeartCanvas);
                                 }, 1200);
                             };
-                        }, 80000);
+                        }, 1000);
                     });
                 };
             });
