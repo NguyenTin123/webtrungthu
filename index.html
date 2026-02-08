@@ -9,7 +9,22 @@
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body, html { height: 100%; overflow: hidden; font-family: 'Montserrat', sans-serif; }
+
+        :root { --vh: 1vh; }
+
+        /* Fix giật/nhảy viewport trên mobile (address bar) */
+        html, body {
+            height: calc(var(--vh) * 100);
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            overscroll-behavior: none;
+            touch-action: manipulation;
+        }
+        body {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+        }
 
         /* Reduce animations if user prefers */
         @media (prefers-reduced-motion: reduce) {
@@ -68,7 +83,7 @@
 
         /* --- 2. MÀN HÌNH ĐẾM NGƯỢC --- */
         #screen-counter {
-            display: none; height: 100vh; width: 100vw;
+            display: none; height: calc(var(--vh) * 100); width: 100vw;
             flex-direction: column;
             justify-content: center; align-items: center;
             background: radial-gradient(circle, #2d0b2e 0%, #000 100%);
@@ -241,7 +256,7 @@
 
         /* --- 4. TRANG CHÍNH --- */
         #screen-main {
-            display: none; height: 100vh; width: 100vw;
+            display: none; height: calc(var(--vh) * 100); width: 100vw;
             background: radial-gradient(circle, #fff0f3 0%, #ffdde1 100%);
             position: relative; overflow: hidden;
         }
@@ -307,84 +322,6 @@
         .petal { position: absolute; top: -10%; user-select: none; pointer-events: none; z-index: 50; animation: fall linear infinite, sway ease-in-out infinite; }
         @keyframes fall { to { top: 110%; } }
         @keyframes sway { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(100px); } }
-
-        /* --- CSS TRANG TRÍ THIỆP MỜI --- */
-        .invitation-card-custom {
-            background: #fffaf0 !important;
-            border: 15px solid transparent !important;
-            border-image: url('https://www.transparenttextures.com/patterns/gold-dust.png') 30 round;
-            outline: 2px solid #b8860b;
-            outline-offset: -10px;
-            border-radius: 5px !important;
-            box-shadow: 0 0 40px rgba(0,0,0,0.3), inset 0 0 100px rgba(184, 134, 11, 0.1) !important;
-        }
-
-        .invitation-header {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 900;
-            letter-spacing: 3px;
-            color: #8b4513;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #b8860b;
-            display: inline-block;
-            padding-bottom: 5px;
-        }
-
-        .swal-img-polaroid {
-            background: white;
-            padding: 10px 10px 25px 10px;
-            border: 1px solid #ddd;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
-            transform: rotate(-3deg);
-            margin: 15px 0;
-            display: inline-block;
-        }
-
-        /* Hint click */
-        .click-hint {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.8rem;
-            color: #b8860b;
-            margin-top: 10px;
-            display: block;
-            animation: blinkHint 1.5s infinite;
-        }
-        @keyframes blinkHint {
-            0% { opacity: 0.3; }
-            50% { opacity: 1; }
-            100% { opacity: 0.3; }
-        }
-
-        /* Ảnh kỉ niệm bay lơ lửng khi mở quà */
-        .floating-photo-surprise {
-            position: fixed;
-            width: 100px; height: 100px;
-            object-fit: cover;
-            border: 4px solid white;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-            z-index: 1000002;
-            pointer-events: none;
-            animation: float-up-fade 8s ease-in forwards;
-            opacity: 0;
-        }
-        @keyframes float-up-fade {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-120vh) rotate(20deg); opacity: 0; }
-        }
-
-        .soft-glow-text {
-            font-family: 'Dancing Script', cursive;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 1), 0 0 30px rgba(255, 64, 129, 0.8);
-            text-align: center;
-            z-index: 1000003;
-            pointer-events: none;
-            line-height: 1.4;
-        }
 
         /* ================== NEW YEAR SCREEN ================== */
         #screen-newyear {
@@ -521,32 +458,6 @@
             animation: pulse 1.5s infinite;
         }
 
-        /* ================== GO TO NEW YEAR ================== */
-        #go-newyear {
-            position: fixed;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.1rem;
-            font-family: 'Montserrat', sans-serif;
-            color: gold;
-            cursor: pointer;
-            opacity: 0;
-            z-index: 999999;
-            animation: blinkNY 1.8s infinite;
-            transition: opacity 1s, transform 0.3s;
-        }
-
-        #go-newyear:hover {
-            transform: translateX(-50%) scale(1.1);
-            text-shadow: 0 0 10px gold;
-        }
-
-        @keyframes blinkNY {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
-        }
-
         /* ================== THANK YOU SCREEN ================== */
         #screen-thankyou {
             display: none;
@@ -585,6 +496,32 @@
         .thankyou-title { font-family: 'Dancing Script', cursive; font-size: 3rem; margin-bottom: 20px; text-shadow: 2px 2px 0px #fff; }
         .thankyou-text { font-family: 'Montserrat', sans-serif; font-size: 1.5rem; margin-bottom: 30px; line-height: 1.6; }
         .thankyou-emojis { font-size: 2rem; }
+
+        /* ================== GO TO NEW YEAR ================== */
+        #go-newyear {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.1rem;
+            font-family: 'Montserrat', sans-serif;
+            color: gold;
+            cursor: pointer;
+            opacity: 0;
+            z-index: 999999;
+            animation: blinkNY 1.8s infinite;
+            transition: opacity 1s, transform 0.3s;
+        }
+
+        #go-newyear:hover {
+            transform: translateX(-50%) scale(1.1);
+            text-shadow: 0 0 10px gold;
+        }
+
+        @keyframes blinkNY {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
 
         /* ================== RESPONSIVE ================== */
         @media (max-width: 768px) {
@@ -651,6 +588,7 @@
     </style>
 </head>
 <body>
+
     <div id="fireworks-container"></div>
 
     <div id="screen-intro">
@@ -734,16 +672,21 @@
         </div>
     </div>
 
-    <audio id="player" loop preload="auto">
-        <!-- Bạn tự thêm nhạc nếu cần -->
-        <!-- <source src="sn.mp3" type="audio/mp3"> -->
-    </audio>
+    <audio id="player" loop preload="auto"></audio>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fireworks-js@2.x/dist/index.umd.js"></script>
 
     <script>
+        // Fix viewport height on mobile (address bar ẩn/hiện làm nhảy 100vh)
+        function setVh() {
+            document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+        }
+        setVh();
+        window.addEventListener('resize', setVh, { passive: true });
+        window.addEventListener('orientationchange', setVh, { passive: true });
+
         // ========= Helpers =========
         const $ = (sel) => document.querySelector(sel);
         const $$ = (sel) => Array.from(document.querySelectorAll(sel));
@@ -845,7 +788,7 @@
         let confettiTimer = null;
         function startContinuousConfetti() {
             const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 99999 };
-            const intervalMs = isMobile ? 450 : 220; // giảm trên mobile
+            const intervalMs = isMobile ? 450 : 220;
             function randomInRange(min, max) { return Math.random() * (max - min) + min; }
             confettiTimer = setInterval(() => {
                 confetti(Object.assign({}, defaults, {
@@ -887,7 +830,6 @@
 
             fireworksInstance.start();
 
-            // Spark edges (throttled)
             const intervalMs = isMobile ? 900 : 500;
             setInterval(() => {
                 const sparkConfig = {
@@ -975,34 +917,13 @@
         }
 
         // ========= Data =========
-        const heartColors = [
-            'hsl(0, 100%, 70%)',
-            'hsl(60, 100%, 70%)',
-            'hsl(120, 100%, 70%)',
-            'hsl(180, 100%, 70%)',
-            'hsl(240, 100%, 70%)',
-            'hsl(300, 100%, 70%)'
-        ];
-
         const birthdayData = [
-            { wish: "Chúc Thuý Anh tuổi mới rạng rỡ như ánh mặt trời! ☀️", img: "a1.jpg",
-              finalWish: "Hãy luôn tỏa sáng, ấm áp và lan tỏa năng lượng tích cực đến mọi người xung quanh nhé!"
-            },
-            { wish: "Chúc Thuý Anh luôn xinh đẹp, hạnh phúc bên gia đình! 🌸", img: "a40.jpg",
-              finalWish: "Mong rằng mỗi ngày trôi qua đều ngập tràn yêu thương và những khoảnh khắc bình yên."
-            },
-            { wish: "Mong Thuý Anh luôn gặp may mắn trong cuộc sống! 🍀", img: "a33.png",
-              finalWish: "Dù đi đến đâu hay làm điều gì, cũng luôn có những điều tốt đẹp chờ đón phía trước."
-            },
-            { wish: "Chúc Thuý Anh tuổi mới đạt được mọi ước mơ mong muốn! ✨", img: "a25.jpg",
-              finalWish: "Hãy mạnh dạn theo đuổi đam mê, vì Thuý Anh xứng đáng với những điều tuyệt vời nhất."
-            },
-            { wish: "Hãy luôn giữ nụ cười hồn nhiên này trên môi nhé! 😊", img: "a23.jpg",
-              finalWish: "Bởi nụ cười của Thuý Anh chính là điều làm thế giới này trở nên dễ thương hơn."
-            },
-            { wish: "Happy Birthday! Mãi xinh đẹp và thành công nhen! ❤️", img: "a41.png",
-              finalWish: "Chúc một buổi sinh nhật thật rực rỡ, đầy kỷ niệm đáng nhớ và thật nhiều niềm vui!"
-            }
+            { wish: "Chúc Thuý Anh tuổi mới rạng rỡ như ánh mặt trời! ☀️", img: "a1.jpg", finalWish: "Hãy luôn tỏa sáng, ấm áp và lan tỏa năng lượng tích cực đến mọi người xung quanh nhé!" },
+            { wish: "Chúc Thuý Anh luôn xinh đẹp, hạnh phúc bên gia đình! 🌸", img: "a40.jpg", finalWish: "Mong rằng mỗi ngày trôi qua đều ngập tràn yêu thương và những khoảnh khắc bình yên." },
+            { wish: "Mong Thuý Anh luôn gặp may mắn trong cuộc sống! 🍀", img: "a33.png", finalWish: "Dù đi đến đâu hay làm điều gì, cũng luôn có những điều tốt đẹp chờ đón phía trước." },
+            { wish: "Chúc Thuý Anh tuổi mới đạt được mọi ước mơ mong muốn! ✨", img: "a25.jpg", finalWish: "Hãy mạnh dạn theo đuổi đam mê, vì Thuý Anh xứng đáng với những điều tuyệt vời nhất." },
+            { wish: "Hãy luôn giữ nụ cười hồn nhiên này trên môi nhé! 😊", img: "a23.jpg", finalWish: "Bởi nụ cười của Thuý Anh chính là điều làm thế giới này trở nên dễ thương hơn." },
+            { wish: "Happy Birthday! Mãi xinh đẹp và thành công nhen! ❤️", img: "a41.png", finalWish: "Chúc một buổi sinh nhật thật rực rỡ, đầy kỷ niệm đáng nhớ và thật nhiều niềm vui!" }
         ];
 
         // ========= New Year screen =========
@@ -1034,7 +955,6 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
             ny.style.display = "flex";
             ny.style.opacity = "1";
 
-            // reset
             const title = document.querySelector('.ny-title');
             const text = document.querySelector('.ny-text');
             if (title) title.innerHTML = '';
@@ -1136,7 +1056,7 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                 createSparkles('stick-1');
                 createSparkles('stick-2');
             }, isMobile ? 90 : 60);
-            // code đốt cháy pháo hoa
+
             let count = 15;
             const digitEl = document.getElementById('digit');
             digitEl.innerText = count;
@@ -1197,7 +1117,7 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                         if (goNY) goNY.style.opacity = "1";
                     }, 15000);
                 }, 900);
-            }, isMobile ? 65000 : 65000);
+            }, 65000);
         }
 
         // ========= Events =========
@@ -1209,7 +1129,6 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
             startContinuousConfetti();
             startUpwardFireworks();
 
-            // clear NY/ThankYou placeholders
             const nyTitle = document.querySelector('.ny-title');
             const nyText = document.querySelector('.ny-text');
             if (nyTitle) nyTitle.innerHTML = '';
@@ -1219,17 +1138,14 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
             if (tyTitle) tyTitle.innerHTML = '';
             if (tyText) tyText.innerHTML = '';
 
-            // global click for music
             document.addEventListener('click', handleGlobalClick);
 
-            // Start button
             const startBtn = document.getElementById('start-btn');
             if (startBtn) startBtn.onclick = () => {
                 handleGlobalClick();
                 startCounter();
             };
 
-            // Go to New Year (need 6 wishes)
             const goNY = document.getElementById('go-newyear');
             if (goNY) {
                 goNY.onclick = () => {
@@ -1253,7 +1169,6 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                 };
             }
 
-            // NY continue -> Thank you
             const btnToMain = document.getElementById('btn-to-main');
             if (btnToMain) {
                 btnToMain.onclick = () => {
@@ -1265,7 +1180,6 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                 };
             }
 
-            // Photo clicks
             document.querySelectorAll('.avatar__img').forEach((imgEl, index) => {
                 imgEl.onclick = () => {
                     clickedPhotos.add(index);
@@ -1301,138 +1215,6 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                         allowEscapeKey: false,
                         showCloseButton: false,
                         customClass: { popup: 'invitation-card-custom' }
-                    }).then((result) => {
-                        if (!result.isConfirmed) return;
-
-                        const overlay = document.createElement('div');
-                        overlay.style.cssText = `
-                            position: fixed; inset: 0;
-                            background: radial-gradient(circle, #2c0000 0%, #000 100%);
-                            z-index: 999999; display: flex; flex-direction: column;
-                            justify-content: center; align-items: center;
-                            opacity: 0; transition: opacity 1.2s;
-                        `;
-                        document.body.appendChild(overlay);
-
-                        const messageBox = document.createElement('div');
-                        messageBox.className = 'soft-glow-text';
-                        messageBox.innerHTML = `
-                            <h1 style="font-size: clamp(2rem, 7vw, 3rem); margin-bottom: 15px;">Thúy Anh ơi...</h1>
-                            <p style="font-size: clamp(1rem, 3.8vw, 1.6rem); width: 85%; margin: 0 auto; font-family: 'Montserrat';">
-                                ${data.finalWish || "Chúc bạn luôn hạnh phúc!"}
-                            </p>
-                        `;
-                        overlay.appendChild(messageBox);
-
-                        const heartCanvas = document.createElement('canvas');
-                        heartCanvas.style.cssText = 'position: fixed; inset: 0; z-index: 1000001; pointer-events: none;';
-                        document.body.appendChild(heartCanvas);
-                        const ctx = heartCanvas.getContext('2d');
-                        function resizeHeartCanvas() {
-                            heartCanvas.width = window.innerWidth;
-                            heartCanvas.height = window.innerHeight;
-                        }
-                        resizeHeartCanvas();
-                        window.addEventListener('resize', resizeHeartCanvas, { passive: true });
-
-                        function getHeartPoint(t) {
-                            const x = 16 * Math.pow(Math.sin(t), 3);
-                            const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
-                            const scale = isMobile ? 12 : 15;
-                            return { x: x * scale, y: -y * scale };
-                        }
-
-                        const outlineColors = ['#ff4757', '#ffa502', '#2ed573', '#1e90ff', '#3742fa', '#ff6b81'];
-                        let tTime = 0;
-                        let drawProgress = 0;
-
-                        function animateHeart() {
-                            tTime += 0.01;
-                            ctx.clearRect(0, 0, heartCanvas.width, heartCanvas.height);
-
-                            const pulse = 1 + 0.3 * Math.sin(tTime * 2);
-                            const outlineColor = outlineColors[index] || 'gold';
-
-                            ctx.strokeStyle = outlineColor;
-                            ctx.lineWidth = (isMobile ? 6 : 8) * pulse;
-                            ctx.shadowBlur = (isMobile ? 18 : 25) * pulse;
-                            ctx.shadowColor = outlineColor;
-                            ctx.lineCap = 'round';
-                            ctx.lineJoin = 'round';
-
-                            ctx.beginPath();
-                            const steps = 200;
-                            const maxStep = Math.floor(drawProgress * steps);
-                            for (let i = 0; i <= maxStep; i++) {
-                                const t = (i / steps) * Math.PI * 2;
-                                const pt = getHeartPoint(t);
-                                const x = heartCanvas.width / 2 + pt.x;
-                                const y = heartCanvas.height / 2 + pt.y;
-                                if (i === 0) ctx.moveTo(x, y);
-                                else ctx.lineTo(x, y);
-                            }
-                            ctx.stroke();
-
-                            if (drawProgress > 0) {
-                                const particleCount = Math.floor(drawProgress * (isMobile ? 40 : 80));
-                                for (let i = 0; i < particleCount; i++) {
-                                    const t = (i / Math.max(particleCount, 1)) * Math.PI * 2;
-                                    const pt = getHeartPoint(t);
-                                    const x = heartCanvas.width / 2 + pt.x + (Math.random() - 0.5) * 12;
-                                    const y = heartCanvas.height / 2 + pt.y + (Math.random() - 0.5) * 12;
-
-                                    const hue = (tTime * 50 + i * 10) % 360;
-                                    ctx.fillStyle = `hsl(${hue}, 100%, 70%)`;
-                                    ctx.shadowBlur = 10;
-                                    ctx.shadowColor = `hsl(${hue}, 100%, 70%)`;
-
-                                    ctx.beginPath();
-                                    ctx.arc(x, y, 2.5 + Math.random() * 3, 0, Math.PI * 2);
-                                    ctx.fill();
-                                }
-                            }
-
-                            if (drawProgress < 1) drawProgress += isMobile ? 0.0016 : 0.001;
-                            if (overlay.parentNode) requestAnimationFrame(animateHeart);
-                        }
-
-                        function startFloatingPhotos() {
-                            let pIdx = 0;
-                            const max = isMobile ? 24 : 50;
-                            const interval = setInterval(() => {
-                                if (pIdx > max) { clearInterval(interval); return; }
-                                const img = document.createElement('img');
-                                img.src = photoSourcesAll[pIdx % photoSourcesAll.length];
-                                img.className = 'floating-photo-surprise';
-                                img.style.left = Math.random() * 80 + 10 + "vw";
-                                img.style.top = "100vh";
-                                document.body.appendChild(img);
-                                pIdx++;
-                                setTimeout(() => img.remove(), 8000);
-                            }, isMobile ? 1500 : 1200);
-                        }
-
-                        setTimeout(() => {
-                            overlay.style.opacity = "1";
-                            animateHeart();
-                            startFloatingPhotos();
-                        }, 100);
-
-                        setTimeout(() => {
-                            const closeTip = document.createElement('div');
-                            closeTip.innerText = "Chạm để quay lại ❤️";
-                            closeTip.style.cssText = "position:fixed; bottom:8%; color:rgba(255,255,255,0.7); z-index:1000010; font-family:Montserrat; font-size:0.9rem;";
-                            overlay.appendChild(closeTip);
-                            overlay.style.cursor = "pointer";
-                            overlay.onclick = () => {
-                                overlay.style.opacity = "0";
-                                setTimeout(() => {
-                                    overlay.remove();
-                                    heartCanvas.remove();
-                                    window.removeEventListener('resize', resizeHeartCanvas);
-                                }, 1200);
-                            };
-                        }, 900);
                     });
                 };
             });
