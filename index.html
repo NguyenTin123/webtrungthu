@@ -35,7 +35,11 @@
             top: 0; left: 0;
             width: 100%; height: 100%;
             pointer-events: none;
-            z-index: 99999;
+            z-index: 2000000; /* always on top */
+        }
+        #fireworks-container canvas {
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9));
+            mix-blend-mode: screen;
         }
 
         /* --- 1. MÀN HÌNH CHỜ (ĐÃ TRANG TRÍ) --- */
@@ -655,7 +659,7 @@
             .avatar__title { font-size: 1.5rem; }
             .meaningful-text { font-size: 0.8rem; min-height: 120px; }
             .letter-balloon { width: 25px; height: 30px; font-size: 10px; }
-            .avatar__img { width: 130px; height: 130px; }
+            .avatar__img { width: 60px; height: 60px; }
             .glow-ring { width: 200px; height: 200px; }
             .sparkler-stick { height: 150px; }
             .falling-photo { width: 90px; height: 90px; }
@@ -732,7 +736,7 @@
     </div>
 
     <div id="screen-main">
-        <div id="go-newyear">✨Bấm vào để xem món quà thứ 2❤️ 🎆</div>
+        <div id="go-newyear">✨ Bấm xem món quà thứ 2❤️ 🎆</div>
         <div class="balloon-row" id="balloon-row"></div>
         <div class="container" style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
             <div class="photo-grid">
@@ -880,9 +884,8 @@
             }, intervalMs);
         }
 
-        // ========= Fireworks-js (keep) =========
+        // ========= Fireworks-js (same style as intro screen) =========
         let fireworksInstance = null;
-        let fireworksSparkInterval = null;
         function startUpwardFireworks() {
             const container = document.getElementById('fireworks-container');
             if (!container || typeof Fireworks === 'undefined') return;
@@ -901,7 +904,7 @@
                 traceSpeed: 10,
                 explosion: 6,
                 intensity: isMobile ? 18 : 30,
-                ficker: true,
+                flicker: true,
                 lineStyle: 'round',
                 hue: { min: 0, max: 360 },
                 delay: { min: 30, max: 60 },
@@ -915,36 +918,50 @@
             });
 
             fireworksInstance.start();
-
-            // Spark edges (throttled)
-            const intervalMs = isMobile ? 900 : 500;
-            fireworksSparkInterval = setInterval(() => {
-                const sparkConfig = {
-                    particleCount: isMobile ? 8 : 12,
-                    startVelocity: 60,
-                    spread: 15,
-                    ticks: 120,
-                    scale: 0.8,
-                    shapes: ['circle'],
-                    colors: ['#FFE45E', '#FFB200', '#FFFFFF', '#FF7400'],
-                    gravity: 1.2,
-                    scalar: 0.7,
-                    zIndex: 99999
-                };
-                confetti({ ...sparkConfig, origin: { x: 0.1, y: 1 }, angle: 80 });
-                confetti({ ...sparkConfig, origin: { x: 0.9, y: 1 }, angle: 100 });
-            }, intervalMs);
         }
 
         function stopUpwardFireworks() {
-            if (fireworksSparkInterval) {
-                clearInterval(fireworksSparkInterval);
-                fireworksSparkInterval = null;
-            }
             if (fireworksInstance && typeof fireworksInstance.stop === 'function') {
                 fireworksInstance.stop();
             }
             fireworksInstance = null;
+        }
+
+        // Short glowing fireworks burst (NOT confetti). Useful for transitions / button clicks.
+        function burstGlowingFireworks(ms) {
+            const durationMs = typeof ms === 'number' ? ms : (isMobile ? 1400 : 1800);
+            if (typeof Fireworks === 'undefined') return;
+
+            const burstLayer = document.createElement('div');
+            burstLayer.style.cssText = 'position:fixed; inset:0; pointer-events:none; z-index:1000000;';
+            document.body.appendChild(burstLayer);
+
+            const burst = new Fireworks.default(burstLayer, {
+                autoresize: true,
+                opacity: 1,
+                acceleration: 1.08,
+                friction: 0.98,
+                gravity: 1.45,
+                particles: isMobile ? 140 : 240,
+                traceLength: 6,
+                traceSpeed: 14,
+                explosion: 10,
+                intensity: isMobile ? 45 : 70,
+                flicker: true,
+                lineStyle: 'round',
+                hue: { min: 0, max: 360 },
+                delay: { min: 10, max: 18 },
+                rocketsPoint: { min: 50, max: 50 },
+                lineWidth: { explosion: { min: 2, max: 5 }, trace: { min: 1, max: 3 } },
+                brightness: { min: 75, max: 100 },
+                decay: { min: 0.012, max: 0.022 }
+            });
+
+            burst.start();
+            setTimeout(() => {
+                try { burst.stop(); } catch {}
+                burstLayer.remove();
+            }, durationMs);
         }
 
         // ========= Counter sparks =========
@@ -1165,6 +1182,56 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
             })();
         }
 
+        // ========= Transition burst (to main screen) =========
+        function burstMainEntrance() {
+            const durationMs = isMobile ? 1200 : 1600;
+            const end = Date.now() + durationMs;
+            const colors = ['#ffffff', '#ffd700', '#ff4757', '#ff6b81', '#00ffea', '#7bed9f'];
+
+            (function frame() {
+                confetti({
+                    particleCount: isMobile ? 26 : 46,
+                    startVelocity: isMobile ? 65 : 80,
+                    spread: 80,
+                    angle: 90,
+                    gravity: 0.9,
+                    scalar: isMobile ? 1.05 : 1.35,
+                    ticks: 220,
+                    origin: { x: 0.5, y: 1 },
+                    colors,
+                    zIndex: 100000
+                });
+
+                confetti({
+                    particleCount: isMobile ? 14 : 26,
+                    startVelocity: isMobile ? 55 : 70,
+                    spread: 55,
+                    angle: 70,
+                    gravity: 0.95,
+                    scalar: isMobile ? 1.0 : 1.2,
+                    ticks: 200,
+                    origin: { x: 0.15, y: 1 },
+                    colors,
+                    zIndex: 100000
+                });
+
+                confetti({
+                    particleCount: isMobile ? 14 : 26,
+                    startVelocity: isMobile ? 55 : 70,
+                    spread: 55,
+                    angle: 110,
+                    gravity: 0.95,
+                    scalar: isMobile ? 1.0 : 1.2,
+                    ticks: 200,
+                    origin: { x: 0.85, y: 1 },
+                    colors,
+                    zIndex: 100000
+                });
+
+                if (Date.now() < end) requestAnimationFrame(frame);
+            })();
+        }
+
         // ========= Start flow =========
         function startCounter() {
             document.getElementById('screen-intro').style.display = "none";
@@ -1177,7 +1244,7 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                 createSparkles('stick-2');
             }, isMobile ? 90 : 60);
             // code đốt cháy pháo hoa
-            let count = 4;
+            let count = 15;
             const digitEl = document.getElementById('digit');
             digitEl.innerText = count;
 
@@ -1203,8 +1270,7 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
             hbContainer.style.opacity = "1";
             hbContainer.style.display = "flex";
 
-            // Stop upward fireworks while reading the message (avoid distraction + mobile lag)
-            stopUpwardFireworks();
+            // Keep fireworks running continuously until the end
 
             const textContainer = document.getElementById('typewriter-text');
             const fullText = "Ngày TA ra đời là một ngày rất đặc biệt với GĐ TA, còn với Tui thì đơn giản là có thêm 1 người bạn đáng yêu, dễ thương. TA chào đời cách Tết vài ngày, như mang theo bầu không khí sum vầy, niềm vui và hành phúc đầu năm đến sớm cho cả nhà. Với GĐ, TA mãi là cô nàng công chúa bé nhỏ, đáng yêu nhất trong nhà. Chúc TA luôn mạnh khỏe, bình an, sớm tìm được 1 tình yêu chân thành để được yêu thương, chiều chuộng. Công việc thì luôn suôn sẻ, gặp đúng người, đúng cơ hội, làm điều mình thích cảm thấy xứng đáng.";
@@ -1234,6 +1300,8 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                     document.getElementById('screen-main').style.display = "block";
                     initBalloons();
                     startFallingPhotos();
+                    // Glowing fireworks burst when entering main screen
+                    burstGlowingFireworks(isMobile ? 1600 : 2200);
                     startUpwardFireworks();
 
                     setTimeout(() => {
@@ -1314,11 +1382,14 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                 imgEl.onclick = () => {
                     clickedPhotos.add(index);
 
+                    // Glowing fireworks burst on image-button page (SweetAlert popup)
+                    burstGlowingFireworks(isMobile ? 1200 : 1600);
+
                     if (clickedPhotos.size === TOTAL_PHOTOS_REQUIRED && typeof Swal !== 'undefined') {
                         Swal.fire({
                             icon: 'success',
                             title: 'Hoàn thành 🎉',
-                            text: 'Hãy bấm tiếp để xem bất ngờ cuối 💖',
+                            text: 'Bạn đã thu nhập đủ 6 lời chúc mừng! Hãy bấm tiếp để xem bất ngờ cuối 💖',
                             confirmButtonText: 'Tuyệt vời ✨',
                             confirmButtonColor: '#ffd700'
                         });
@@ -1328,6 +1399,7 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                     shootCornerFireworks(900);
 
                     Swal.fire({
+                        didOpen: () => burstGlowingFireworks(isMobile ? 900 : 1200),
                         html: `
                             <div style="text-align: center; padding: 10px;">
                                 <div class="invitation-header">Special Invitation</div>
@@ -1347,6 +1419,8 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                         customClass: { popup: 'invitation-card-custom' }
                     }).then((result) => {
                         if (!result.isConfirmed) return;
+
+                        burstGlowingFireworks(isMobile ? 1200 : 1600);
 
                         const overlay = document.createElement('div');
                         overlay.style.cssText = `
