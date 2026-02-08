@@ -1090,11 +1090,13 @@
         ];
 
         // ========= Tet effects for New Year =========
-        function createLanterns() {
+        let lanternInterval = null;
+        let envelopeInterval = null;
+
+        function startContinuousLanterns() {
             const ny = document.getElementById('screen-newyear');
             if (!ny) return;
-            const count = isMobile ? 10 : 20;
-            for (let i = 0; i < count; i++) {
+            lanternInterval = setInterval(() => {
                 const l = document.createElement('div');
                 l.className = 'lantern';
                 l.innerText = '🏮';
@@ -1103,14 +1105,13 @@
                 l.style.animationDelay = Math.random() * 5 + "s";
                 ny.appendChild(l);
                 setTimeout(() => l.remove(), 10000);
-            }
+            }, isMobile ? 2000 : 1500);
         }
 
-        function createRedEnvelopes() {
+        function startContinuousRedEnvelopes() {
             const ny = document.getElementById('screen-newyear');
             if (!ny) return;
-            const count = isMobile ? 8 : 15;
-            for (let i = 0; i < count; i++) {
+            envelopeInterval = setInterval(() => {
                 const r = document.createElement('div');
                 r.className = 'red-envelope';
                 r.innerText = '🧧';
@@ -1119,6 +1120,17 @@
                 r.style.animationDelay = Math.random() * 5 + "s";
                 ny.appendChild(r);
                 setTimeout(() => r.remove(), 12000);
+            }, isMobile ? 2500 : 2000);
+        }
+
+        function stopTetEffects() {
+            if (lanternInterval) {
+                clearInterval(lanternInterval);
+                lanternInterval = null;
+            }
+            if (envelopeInterval) {
+                clearInterval(envelopeInterval);
+                envelopeInterval = null;
             }
         }
 
@@ -1129,7 +1141,7 @@
             const titleText = '🎆 Chúc Mừng Năm Mới 2026 🎆';
 
             const textContent =
-`🌸🌸🌸Nhân dịp năm mới, chúc Thuý Anh cùng gia đình và những người thân yêu một năm mới
+`Nhân dịp năm mới, chúc Thuý Anh cùng gia đình và những người thân yêu một năm mới
 
 An Khang Thịnh Vượng - Vạn Sự Như Ý - Tỷ Sự Như Mơ
 
@@ -1138,7 +1150,7 @@ Sức Khỏe Dồi Dào - Công Việc Thuận Lợi - Gia Đình Hưng Thịnh
 Gia Đình Luôn Ấm Áp - Hạnh Phúc - Tràn Ngập Tiếng Cười và Nhiều Điều May Mắn
 
 Chúc Thuý Anh luôn giữ được tinh thần tích cực, công việc thuận lợi và cuộc sống ngày càng viên mãn.
-Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đầu tốt đẹp cho Thuý Anh cùng với Gia Đình🌸🌸🌸`;
+Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đầu tốt đẹp cho Thuý Anh cùng với Gia Đình🌸`;
 
             typeWriter(title, titleText, 80, () => typeWriter(text, textContent, isMobile ? 28 : 40));
         }
@@ -1151,8 +1163,8 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
             ny.style.opacity = "1";
 
             // Add Tet effects
-            createLanterns();
-            createRedEnvelopes();
+            startContinuousLanterns();
+            startContinuousRedEnvelopes();
 
             // reset
             const title = document.querySelector('.ny-title');
