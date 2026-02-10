@@ -1521,9 +1521,14 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                         heartCanvas.style.cssText = 'position: fixed; inset: 0; z-index: 1000001; pointer-events: none;';
                         document.body.appendChild(heartCanvas);
                         const ctx = heartCanvas.getContext('2d');
+                        let heartRafId = null;
+                        let heartScale = 15;
                         function resizeHeartCanvas() {
                             heartCanvas.width = window.innerWidth;
                             heartCanvas.height = window.innerHeight;
+                            // Make the heart "giant" on any screen size
+                            const minSide = Math.min(heartCanvas.width, heartCanvas.height);
+                            heartScale = Math.max(16, minSide / 28);
                         }
                         resizeHeartCanvas();
                         window.addEventListener('resize', resizeHeartCanvas, { passive: true });
@@ -1531,8 +1536,7 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                         function getHeartPoint(t) {
                             const x = 16 * Math.pow(Math.sin(t), 3);
                             const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
-                            const scale = isMobile ? 12 : 15;
-                            return { x: x * scale, y: -y * scale };
+                            return { x: x * heartScale, y: -y * heartScale };
                         }
 
                         const outlineColors = ['#ff4757', '#ffa502', '#2ed573', '#1e90ff', '#3742fa', '#ff6b81'];
@@ -1543,12 +1547,16 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                             tTime += 0.01;
                             ctx.clearRect(0, 0, heartCanvas.width, heartCanvas.height);
 
-                            const pulse = 1 + 0.3 * Math.sin(tTime * 2);
+                            const pulse = 1 + 0.08 * Math.sin(tTime * 2);
                             const outlineColor = outlineColors[index] || 'gold';
 
+                            const cx = heartCanvas.width / 2;
+                            const cy = heartCanvas.height / 2;
+
+                            // Glow + fill for a big, still-beating heart
                             ctx.strokeStyle = outlineColor;
-                            ctx.lineWidth = (isMobile ? 6 : 8) * pulse;
-                            ctx.shadowBlur = (isMobile ? 18 : 25) * pulse;
+                            ctx.lineWidth = (isMobile ? 7 : 10) * pulse;
+                            ctx.shadowBlur = (isMobile ? 22 : 34) * pulse;
                             ctx.shadowColor = outlineColor;
                             ctx.lineCap = 'round';
                             ctx.lineJoin = 'round';
@@ -1559,10 +1567,20 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                             for (let i = 0; i <= maxStep; i++) {
                                 const t = (i / steps) * Math.PI * 2;
                                 const pt = getHeartPoint(t);
-                                const x = heartCanvas.width / 2 + pt.x;
-                                const y = heartCanvas.height / 2 + pt.y;
+                                const x = cx + pt.x * pulse;
+                                const y = cy + pt.y * pulse;
                                 if (i === 0) ctx.moveTo(x, y);
                                 else ctx.lineTo(x, y);
+                            }
+
+                            // Fill only after the outline is mostly drawn (keeps the "reveal" feeling)
+                            if (drawProgress > 0.35) {
+                                const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, Math.min(heartCanvas.width, heartCanvas.height) * 0.55);
+                                grad.addColorStop(0, 'rgba(255, 105, 180, 0.22)');
+                                grad.addColorStop(0.5, 'rgba(255, 20, 147, 0.14)');
+                                grad.addColorStop(1, 'rgba(255, 71, 87, 0.08)');
+                                ctx.fillStyle = grad;
+                                ctx.fill();
                             }
                             ctx.stroke();
 
@@ -1585,8 +1603,8 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                                 }
                             }
 
-                            if (drawProgress < 1) drawProgress += isMobile ? 0.0016 : 0.001;
-                            if (overlay.parentNode) requestAnimationFrame(animateHeart);
+                            if (drawProgress < 1) drawProgress += isMobile ? 0.0022 : 0.0014;
+                            if (overlay.parentNode) heartRafId = requestAnimationFrame(animateHeart);
                         }
 
                         function startFloatingPhotos() {
@@ -1622,6 +1640,7 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                                 setTimeout(() => {
                                     overlay.remove();
                                     heartCanvas.remove();
+                                    if (heartRafId) cancelAnimationFrame(heartRafId);
                                     window.removeEventListener('resize', resizeHeartCanvas);
                                 }, 1200);
                             };
