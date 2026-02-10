@@ -1319,7 +1319,7 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                 createSparkles('stick-2');
             }, isMobile ? 90 : 60);
             // code đốt cháy pháo hoa
-            let count = 15;
+            let count = 1;
             const digitEl = document.getElementById('digit');
             digitEl.innerText = count;
 
@@ -1536,7 +1536,10 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                         function getHeartPoint(t) {
                             const x = 16 * Math.pow(Math.sin(t), 3);
                             const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
-                            const xScale = 0.8; // <--- CHỈNH Ở ĐÂY (0.7–0.9)
+                                // Mobile: nén ngang mạnh hơn
+                            const xScale = aspectRatio < 1
+                                ? aspectRatio * 0.9   // 📱 mobile
+                                : 1;                  // 💻 desktop
                             return { x: x * heartScale, y: -y * heartScale };
                         }
 
