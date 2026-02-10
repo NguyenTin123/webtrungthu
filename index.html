@@ -1319,7 +1319,7 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                 createSparkles('stick-2');
             }, isMobile ? 90 : 60);
             // code đốt cháy pháo hoa
-            let count = 3;
+            let count = 15;
             const digitEl = document.getElementById('digit');
             digitEl.innerText = count;
 
@@ -1384,7 +1384,7 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                         if (goNY) goNY.style.opacity = "1";
                     }, 15000);
                 }, 900);
-            }, isMobile ? 60000 : 60000);
+            }, isMobile ? 50000 : 50000);
         }
 
         // ========= Events =========
@@ -1536,68 +1536,177 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                         function getHeartPoint(t) {
                             const x = 16 * Math.pow(Math.sin(t), 3);
                             const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
-                                // Mobile: nén ngang mạnh hơn
-                        const xScale = 0.95; // nén ngang
-                            return { x: x * heartScale * xScale, y: -y * heartScale };
+                            return { x: x * heartScale, y: -y * heartScale };
                         }
 
-                        const outlineColors = ['#ff4757', '#ffa502', '#2ed573', '#1e90ff', '#3742fa', '#ff6b81'];
                         let tTime = 0;
                         let drawProgress = 0;
+                        let heartFormed = false;
+                        let particles = [];
+                        const particleCount = isMobile ? 150 : 300;
+
+                        // Unique colors for each photo index
+                        const heartColors = [
+                            '#ff4757', // red
+                            '#3742fa', // blue
+                            '#2ed573', // green
+                            '#ffa502', // orange
+                            '#9c88ff', // purple
+                            '#ff6b81'  // pink
+                        ];
+                        const heartColor = heartColors[index] || '#ff4757';
+
+                        // Initialize particles
+                        for (let i = 0; i < particleCount; i++) {
+                            const t = (i / particleCount) * Math.PI * 2;
+                            const pt = getHeartPoint(t);
+                            const cx = heartCanvas.width / 2;
+                            const cy = heartCanvas.height / 2;
+                            const targetX = cx + pt.x;
+                            const targetY = cy + pt.y;
+
+                            // Start from outside the canvas
+                            const angle = Math.random() * Math.PI * 2;
+                            const distance = Math.max(heartCanvas.width, heartCanvas.height) * 0.6;
+                            const startX = cx + Math.cos(angle) * distance;
+                            const startY = cy + Math.sin(angle) * distance;
+
+                            particles.push({
+                                x: startX,
+                                y: startY,
+                                targetX,
+                                targetY,
+                                t,
+                                speed: 0.65 + Math.random() * 0.1, // Extremely slow speed for very gradual movement
+                                gathered: false
+                            });
+                        }
+
+                        let startBeatingTime = Date.now() + 15000; // Delay beating by 15 seconds
+                        let startFreezeTime = Date.now() + 15000; // Delay freezing by 15 seconds
 
                         function animateHeart() {
                             tTime += 0.01;
                             ctx.clearRect(0, 0, heartCanvas.width, heartCanvas.height);
 
-                            const pulse = 1 + 0.08 * Math.sin(tTime * 2);
-
                             const cx = heartCanvas.width / 2;
                             const cy = heartCanvas.height / 2;
 
-                            // Draw heart as sparkling light dots
-                            const steps = 300; // More steps for smoother dots
-                            const maxStep = Math.floor(drawProgress * steps);
-                            for (let i = 0; i <= maxStep; i++) {
-                                const t = (i / steps) * Math.PI * 2;
-                                const pt = getHeartPoint(t);
-                                const x = cx + pt.x * pulse;
-                                const y = cy + pt.y * pulse;
-
-                                // Vary color for each dot
-                                const hue = (t * 180 / Math.PI + tTime * 100) % 360; // Rainbow based on angle and time
-                                const color = `hsl(${hue}, 100%, 70%)`;
-
-                                ctx.fillStyle = color;
-                                ctx.shadowBlur = 15;
-                                ctx.shadowColor = color;
-
-                                const dotSize = (isMobile ? 3 : 5) + Math.random() * 2;
-                                ctx.beginPath();
-                                ctx.arc(x, y, dotSize, 0, Math.PI * 2);
-                                ctx.fill();
+                            // Slowly move particles to form the heart, but freeze after 15 seconds
+                            if (!heartFormed) {
+                                if (Date.now() > startFreezeTime) {
+                                    // Freeze all particles after 15 seconds
+                                    particles.forEach(p => p.gathered = true);
+                                    heartFormed = true;
+                                } else {
+                                    particles.forEach(p => {
+                                        if (!p.gathered) {
+                                            const dx = p.targetX - p.x;
+                                            const dy = p.targetY - p.y;
+                                            const dist = Math.sqrt(dx * dx + dy * dy);
+                                            if (dist > 2) {
+                                                p.x += (dx / dist) * p.speed;
+                                                p.y += (dy / dist) * p.speed;
+                                            } else {
+                                                p.gathered = true;
+                                            }
+                                        }
+                                    });
+                                }
                             }
 
-                            // Additional floating particles for extra sparkle
-                            if (drawProgress > 0) {
-                                const particleCount = Math.floor(drawProgress * (isMobile ? 60 : 100));
-                                for (let i = 0; i < particleCount; i++) {
-                                    const t = (i / Math.max(particleCount, 1)) * Math.PI * 2;
-                                    const pt = getHeartPoint(t);
-                                    const x = heartCanvas.width / 2 + pt.x + (Math.random() - 0.5) * 20;
-                                    const y = heartCanvas.height / 2 + pt.y + (Math.random() - 0.5) * 20;
+                            // Heartbeat pulse - continuous beating like a living heart, starts after 15 seconds
+                            const pulse = heartFormed && Date.now() > startBeatingTime ? 1 + 0.25 * Math.sin(tTime * 2) : 1; // Stronger, slower beat when formed
 
-                                    const hue = (tTime * 50 + i * 15) % 360;
-                                    ctx.fillStyle = `hsl(${hue}, 100%, 80%)`;
-                                    ctx.shadowBlur = 12;
-                                    ctx.shadowColor = `hsl(${hue}, 100%, 80%)`;
+                            // Add multiple layers of central glow for maximum prominence
+                            if (heartFormed) {
+                                // Outer glow
+                                const outerGlowRadius = heartScale * 35 * pulse;
+                                const outerGlowGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, outerGlowRadius);
+                                outerGlowGrad.addColorStop(0, heartColor + '20');
+                                outerGlowGrad.addColorStop(0.3, heartColor + '10');
+                                outerGlowGrad.addColorStop(1, heartColor + '00');
+                                ctx.fillStyle = outerGlowGrad;
+                                ctx.beginPath();
+                                ctx.arc(cx, cy, outerGlowRadius, 0, Math.PI * 2);
+                                ctx.fill();
 
+                                // Middle glow
+                                const midGlowRadius = heartScale * 20 * pulse;
+                                const midGlowGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, midGlowRadius);
+                                midGlowGrad.addColorStop(0, heartColor + '60');
+                                midGlowGrad.addColorStop(0.5, heartColor + '30');
+                                midGlowGrad.addColorStop(1, heartColor + '00');
+                                ctx.fillStyle = midGlowGrad;
+                                ctx.beginPath();
+                                ctx.arc(cx, cy, midGlowRadius, 0, Math.PI * 2);
+                                ctx.fill();
+
+                                // Inner bright core - appears after 15 seconds
+                                if (Date.now() > startBeatingTime) {
+                                    const coreRadius = heartScale * 8 * pulse;
+                                    const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreRadius);
+                                    coreGrad.addColorStop(0, '#ffffff');
+                                    coreGrad.addColorStop(0.8, heartColor + 'ff');
+                                    coreGrad.addColorStop(1, heartColor + '80');
+                                    ctx.fillStyle = coreGrad;
                                     ctx.beginPath();
-                                    ctx.arc(x, y, 1.5 + Math.random() * 2, 0, Math.PI * 2);
+                                    ctx.arc(cx, cy, coreRadius, 0, Math.PI * 2);
                                     ctx.fill();
                                 }
                             }
 
-                            if (drawProgress < 1) drawProgress += isMobile ? 0.0025 : 0.0018;
+                            // Draw particles as brilliant sparkling light rays forming the heart
+                            particles.forEach(p => {
+                                const relX = p.x - cx;
+                                const relY = p.y - cy;
+                                const scaledX = relX * pulse;
+                                const scaledY = relY * pulse;
+                                const drawX = cx + scaledX;
+                                const drawY = cy + scaledY;
+
+                                // Enhanced gradient for each particle
+                                const particleGrad = ctx.createRadialGradient(drawX, drawY, 0, drawX, drawY, 12);
+                                particleGrad.addColorStop(0, '#ffffff'); // Ultra bright center
+                                particleGrad.addColorStop(0.4, heartColor + 'ff'); // Full opacity color
+                                particleGrad.addColorStop(0.8, heartColor + '80');
+                                particleGrad.addColorStop(1, heartColor + '00'); // Fade out
+
+                                ctx.fillStyle = particleGrad;
+                                ctx.shadowBlur = 40; // Much more glow
+                                ctx.shadowColor = heartColor;
+                                ctx.shadowOffsetX = 3; // More depth
+                                ctx.shadowOffsetY = 3;
+
+                                const size = 6 + Math.random() * 6; // Even larger particles
+                                ctx.beginPath();
+                                ctx.arc(drawX, drawY, size, 0, Math.PI * 2);
+                                ctx.fill();
+
+                                // Add multiple sparkle effects
+                                if (Math.random() > 0.7) {
+                                    // Primary sparkle
+                                    ctx.fillStyle = '#ffffff';
+                                    ctx.shadowBlur = 20;
+                                    ctx.beginPath();
+                                    ctx.arc(drawX + (Math.random() - 0.5) * 15, drawY + (Math.random() - 0.5) * 15, 2 + Math.random() * 3, 0, Math.PI * 2);
+                                    ctx.fill();
+
+                                    // Secondary smaller sparkle
+                                    if (Math.random() > 0.5) {
+                                        ctx.fillStyle = heartColor;
+                                        ctx.shadowBlur = 10;
+                                        ctx.beginPath();
+                                        ctx.arc(drawX + (Math.random() - 0.5) * 20, drawY + (Math.random() - 0.5) * 20, 1 + Math.random() * 2, 0, Math.PI * 2);
+                                        ctx.fill();
+                                    }
+                                }
+                            });
+
+                            if (drawProgress < 1) {
+                                drawProgress += isMobile ? 0.001 : 0.0005; // Very slow progress
+                                if (drawProgress >= 1) heartFormed = true;
+                            }
                             if (overlay.parentNode) heartRafId = requestAnimationFrame(animateHeart);
                         }
 
