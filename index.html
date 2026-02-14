@@ -169,7 +169,7 @@
             background: white; padding: 40px 60px; border-radius: 30px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.15); border: 10px solid #fff;
             outline: 2px dashed #ff4757; outline-offset: -15px;
-            text-align: center; max-width: 90%; position: relative;
+            text-align: center; max-width: 98%; position: relative;
             animation: cardPop 1s cubic-bezier(0.17, 0.89, 0.32, 1.49);
             overflow: visible;
         }
@@ -628,7 +628,214 @@
         .thankyou-content { color: #2d3436; animation: popIn 1s ease; position: relative; z-index: 2; padding: 0 14px; }
         .thankyou-title { font-family: 'Dancing Script', cursive; font-size: 3rem; margin-bottom: 20px; text-shadow: 2px 2px 0px #fff; }
         .thankyou-text { font-family: 'Montserrat', sans-serif; font-size: 1.5rem; margin-bottom: 30px; line-height: 1.6; }
-        .thankyou-emojis { font-size: 2rem; }
+        .thankyou-emojis { font-size: 2rem; margin-bottom: 20px; }
+        
+        /* Button mở lì xì */
+        .lixi-btn {
+            padding: 18px 50px;
+            font-size: 1.4rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #ff4757 0%, #ff6b81 50%, #ffa502 100%);
+            border: 3px solid #fff;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(255, 71, 87, 0.6), 0 0 60px rgba(255, 165, 2, 0.4);
+            animation: pulse 1.5s infinite, glow 2s ease-in-out infinite;
+            transition: all 0.3s ease;
+            z-index: 10;
+            margin-top: 20px;
+        }
+        .lixi-btn:hover {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, #ff6b81 0%, #ffa502 50%, #ff4757 100%);
+            box-shadow: 0 0 40px rgba(255, 71, 87, 0.8), 0 0 80px rgba(255, 165, 2, 0.6);
+        }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 30px rgba(255, 71, 87, 0.6), 0 0 60px rgba(255, 165, 2, 0.4); }
+            50% { box-shadow: 0 0 50px rgba(255, 71, 87, 0.8), 0 0 80px rgba(255, 165, 2, 0.6); }
+        }
+
+        /* ================== LIXI SCREEN ================== */
+        #screen-lixi {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 50%, #c0392b 100%),
+                        radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.2) 0%, transparent 40%),
+                        radial-gradient(circle at 70% 70%, rgba(255, 215, 0, 0.15) 0%, transparent 40%);
+            z-index: 100002;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        #screen-lixi::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(2px 2px at 40px 60px, #ffd700, transparent),
+                radial-gradient(3px 3px at 120px 100px, #fff, transparent),
+                radial-gradient(2px 2px at 200px 150px, #ffd700, transparent),
+                radial-gradient(3px 3px at 300px 80px, #fff, transparent),
+                radial-gradient(2px 2px at 400px 200px, #ffd700, transparent);
+            background-size: 450px 300px;
+            animation: twinkleLixi 4s infinite ease-in-out;
+            opacity: 0.7;
+        }
+
+        @keyframes twinkleLixi {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .lixi-content {
+            position: relative;
+            z-index: 10;
+            animation: popIn 1s ease;
+        }
+
+        .lixi-envelope {
+            font-size: clamp(6rem, 20vw, 12rem);
+            cursor: pointer;
+            animation: floatEnvelope 3s ease-in-out infinite;
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.4));
+            transition: transform 0.3s ease;
+            user-select: none;
+        }
+
+        .lixi-envelope:hover {
+            transform: scale(1.15) rotate(-5deg);
+        }
+
+        @keyframes floatEnvelope {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(3deg); }
+        }
+
+        .lixi-hint {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: #ffd700;
+            margin-top: 30px;
+            animation: blinkHint 1.5s infinite;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+
+        @keyframes blinkHint {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        /* Lixi opened state */
+        .lixi-envelope.opened {
+            animation: none;
+            transform: scale(0) rotate(-180deg);
+            opacity: 0;
+            transition: all 0.8s ease-in-out;
+        }
+
+        .lixi-card {
+            display: none;
+            position: absolute;
+            inset: 0;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            animation: cardReveal 1s ease forwards;
+            padding: 20px;
+        }
+
+        @keyframes cardReveal {
+            0% { transform: scale(0.5) rotateY(90deg); opacity: 0; }
+            100% { transform: scale(1) rotateY(0deg); opacity: 1; }
+        }
+
+        .lixi-card-inner {
+            background: linear-gradient(145deg, #fff9e6 0%, #fff 50%, #fff9e6 100%);
+            padding: 50px 90px;
+            border-radius: 25px;
+            box-shadow: 
+                0 25px 60px rgba(0, 0, 0, 0.3),
+                inset 0 0 30px rgba(255, 215, 0, 0.1);
+            border: 5px solid #ffd700;
+            width: 1000px;
+            max-width: 1400px;
+            max-height: 95vh;
+            position: relative;
+        }
+
+        .lixi-card-inner::before {
+            content: '🧧';
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4rem;
+        }
+
+        .lixi-card-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2rem, 6vw, 3rem);
+            color: #c0392b;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .lixi-card-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            color: #2c3e50;
+            line-height: 1.8;
+            text-align: center;
+            white-space: pre-line;
+        }
+
+        .lixi-card-money {
+            font-size: 24px;
+            margin: 25px 0;
+            animation: pulse 1.5s infinite;
+        }
+
+        .lixi-close-btn {
+            margin-top: 25px;
+            padding: 12px 40px;
+            font-size: 1.1rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(192, 57, 43, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .lixi-close-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(192, 57, 43, 0.6);
+        }
+
+        /* Golden particles */
+        .golden-particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ffd700;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 15;
+            animation: goldenFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes goldenFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+        }
 
         /* ================== RESPONSIVE ================== */
         @media (max-width: 768px) {
@@ -759,6 +966,28 @@
             <h1 class="thankyou-title"></h1>
             <p class="thankyou-text"></p>
             <div class="thankyou-emojis">🌸🎂💖🌼🎁✨</div>
+            <button class="lixi-btn" id="btn-lixi">🧧 Mở Lì Xì 🎁</button>
+        </div>
+    </div>
+
+    <!-- ================== LIXI SCREEN ================== -->
+    <div id="screen-lixi">
+        <div class="lixi-content">
+            <div class="lixi-envelope" id="lixi-envelope">🧧</div>
+            <p class="lixi-hint">Chạm để mở lì xì nhé!</p>
+            <div class="lixi-card" id="lixi-card">
+                <div class="lixi-card-inner">
+                    <h2 class="lixi-card-title">🎊 Lì Xì May Mắn 🎊</h2>
+                    <div class="lixi-card-money">💰 9.999.999 ₫</div>
+                    <p class="lixi-card-text">
+Chúc Thuý Anh một năm mới Bính Ngọ 2026:
+- Vạn sự như ý, tiền tài phú quý đong đầy như nước sông Hồng.
+- Sức khỏe dồi dào, trẻ đẹp như hoa đào ngày xuân.
+✨ Hãy gửi hình và stk để được nhận lixi nhé!❤️
+                    </p>
+                    <button class="lixi-close-btn" id="btn-close-lixi">Đóng lại ❤️</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1230,8 +1459,8 @@ Năm mới đến sẽ có thật nhiều niềm vui và những khởi đầu t
 
             emojis.style.opacity = '0';
             const titleText = 'Cảm ơn Thuý Anh vì đã dành thời gian đón nhận món quà nhỏ này ❤️';
-            const textContent = 'Dù chỉ là một món quà giản dị và có thể chưa thật sự hoàn hảo, Tín vẫn mong Thuý Anh sẽ đón nhận bằng tất cả sự chân thành. Nếu có điều gì chưa trọn vẹn, mong Thuý Anh thông cảm bỏ qua nhé. Hy vọng món quà này có thể khiến Thuý Anh vui hơn và không còn buồn như Tín đã hứa 🌸';
-            const textContent1 = 'Chúc Thuý Anh luôn gặp nhiều điều tốt đẹp, mỗi ngày đều ngập tràn niềm vui, sự ấm áp và năng lượng tích cực. Mong Thuý Anh luôn hạnh phúc và thành công trên con đường mình chọn 🌸';
+            const textContent = 'Dù chỉ là món quà giản dị và chưa thật sự hoàn hảo, vẫn mong Thuý Anh sẽ đón nhận sự chân thành này. Nếu có gì chưa trọn vẹn, mong Thuý Anh thông cảm bỏ qua. Hy vọng món quà này có thể khiến Thuý Anh vui hơn và không còn buồn như Tín đã hứa 🌸';
+            const textContent1 = 'Chúc Thuý Anh luôn gặp nhiều điều tốt đẹp, mỗi ngày đều ngập tràn niềm vui, sự ấm áp và năng lượng tích cực.🌸';
             const textContent2 = 'Vậy là Tín đã thực hiện được lời hứa tặng Thuý Anh 3/4 món quà kỷ niệm. Món quà cuối cùng, Tín hy vọng sẽ có cơ hội được tự tay trao đến Thuý Anh vào một dịp đặc biệt 🌸';
 
             typeWriter(title, titleText, 70, () => {
@@ -1419,7 +1648,7 @@ Năm mới đến sẽ có thật nhiều niềm vui và những khởi đầu t
                         if (goNY) goNY.style.opacity = "1";
                     }, 15000);
                 }, 900);
-            }, isMobile ? 60000 : 60000);
+            }, isMobile ? 1000 : 1000);
         }
 
         // ========= Events =========
@@ -1484,6 +1713,81 @@ Năm mới đến sẽ có thật nhiều niềm vui và những khởi đầu t
                     const ty = document.getElementById('screen-thankyou');
                     ty.style.display = "flex";
                     startThankYouTypewriter();
+                };
+            }
+
+            // ========= LIXI FUNCTIONALITY =========
+            // Button to open lixi screen
+            const btnLixi = document.getElementById('btn-lixi');
+            if (btnLixi) {
+                btnLixi.onclick = () => {
+                    const ty = document.getElementById('screen-thankyou');
+                    ty.style.display = "none";
+                    const lixi = document.getElementById('screen-lixi');
+                    lixi.style.display = "flex";
+                    
+                    // Reset envelope state
+                    const envelope = document.getElementById('lixi-envelope');
+                    const card = document.getElementById('lixi-card');
+                    if (envelope) {
+                        envelope.classList.remove('opened');
+                        envelope.style.display = 'block';
+                    }
+                    if (card) {
+                        card.style.display = 'none';
+                    }
+                };
+            }
+
+            // Function to generate random amount
+            function generateRandomAmount() {
+                // Specific amounts: 291202, 310103, 112025, 240125
+                const amounts = [291202, 310103, 112025, 240125];
+                
+                // Randomly pick one from the array
+                const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
+                
+                // Format with Vietnamese Dong
+                return randomAmount.toLocaleString('vi-VN') + ' ₫';
+            }
+
+            // Envelope click to open and show random amount
+            const lixiEnvelope = document.getElementById('lixi-envelope');
+            if (lixiEnvelope) {
+                lixiEnvelope.onclick = () => {
+                    // Generate random amount
+                    const randomAmount = generateRandomAmount();
+                    
+                    // Update the money display
+                    const moneyEl = document.querySelector('.lixi-card-money');
+                    if (moneyEl) {
+                        moneyEl.innerHTML = '💰 ' + randomAmount;
+                    }
+                    
+                    // Animate envelope opening
+                    lixiEnvelope.classList.add('opened');
+                    
+                    // Show the card after envelope animation
+                    setTimeout(() => {
+                        lixiEnvelope.style.display = 'none';
+                        const card = document.getElementById('lixi-card');
+                        if (card) {
+                            card.style.display = 'flex';
+                        }
+                    }, 800);
+                };
+            }
+
+            // Close lixi card button
+            const btnCloseLixi = document.getElementById('btn-close-lixi');
+            if (btnCloseLixi) {
+                btnCloseLixi.onclick = () => {
+                    const lixi = document.getElementById('screen-lixi');
+                    lixi.style.display = "none";
+                    
+                    // Show thank you screen again
+                    const ty = document.getElementById('screen-thankyou');
+                    ty.style.display = "flex";
                 };
             }
 
