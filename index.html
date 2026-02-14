@@ -701,10 +701,10 @@
         <div id="intro-balloons-container"></div>
         <div class="intro-gift">🎁</div>
         <h1 style="color: white; margin-bottom: 30px; padding: 0 20px; z-index: 10; text-shadow: 2px 2px 15px rgba(0,0,0,0.2);">
-            🌸 MÓN QUÀ SINH NHẬT DÀNH CHO THUÝ ANH🌸<br>
+            🌸 MÓN QUÀ SINH NHẬT T2 DÀNH CHO THUÝ ANH🌸<br>
             <span style="font-size: 0.5em; font-weight: 400; opacity: 0.9;">(ADMIN AT TRẦN)</span>
         </h1>
-        <button id="start-btn">CÙNG NHAU KHÁM PHÁ MÓN QUÀ SINH NHẬT 🎁</button>
+        <button id="start-btn">MONG MÓN QUÀ NÀY SẼ LÀM THUÝ ANH HẾT BUỒN VÀ VUI TRỞ LẠI 🎁</button>
         <p style="margin-top: 20px; color: white; font-style: italic; opacity: 0.7; z-index: 10;">A special surprise is waiting for you...</p>
     </div>
 
@@ -809,13 +809,51 @@
         const TOTAL_PHOTOS_REQUIRED = 6;
 
         // ========= Typewriter (reuse) =========
-        function typeWriter(el, text, speed, done) {
+        function typeWriter(el) {
             if (!el) return;
+            
+            // Get all arguments after 'el'
+            const args = Array.from(arguments).slice(1);
+            
+            // Determine which arguments are texts, speed, and callback
+            let texts = [];
+            let speed = 50;
+            let done = undefined;
+            
+            // Check if last argument is a callback function
+            if (args.length > 0 && typeof args[args.length - 1] === 'function') {
+                done = args.pop();
+            }
+            
+            // Check if the argument before callback (or last argument if no callback) is a number (speed)
+            if (args.length > 0 && typeof args[args.length - 1] === 'number') {
+                speed = args.pop();
+            }
+            
+            // Remaining arguments are texts
+            texts = args;
+            
+            if (texts.length === 0) return;
+            
+            let textIndex = 0;
             let i = 0;
             el.innerHTML = '';
+            
             function tick() {
-                if (i >= text.length) return done && done();
-                const ch = text.charAt(i++);
+                const currentText = texts[textIndex];
+                if (i >= currentText.length) {
+                    textIndex++;
+                    if (textIndex < texts.length) {
+                        // Add spacing before next text
+                        el.innerHTML += '<br><br>';
+                        i = 0;
+                        setTimeout(tick, speed * 3); // Small pause between texts
+                        return;
+                    } else {
+                        return done && done();
+                    }
+                }
+                const ch = currentText.charAt(i++);
                 el.innerHTML += (ch === '\n') ? '<br>' : ch;
                 setTimeout(tick, speed);
             }
@@ -1073,13 +1111,13 @@
               finalWish: "Hãy luôn tỏa sáng, ấm áp và lan tỏa năng lượng tích cực đến mọi người xung quanh nhé!"
             },
             { wish: "Chúc Thuý Anh luôn xinh đẹp, hạnh phúc bên gia đình! 🌸", img: "a40.jpg",
-              finalWish: "Mong rằng mỗi ngày trôi qua đều ngập tràn yêu thương và những khoảnh khắc bình yên."
+              finalWish: "Mong rằng mỗi ngày trôi qua với Thuý Anh đều ngập tràn yêu thương và những khoảnh khắc bình yên."
             },
-            { wish: "Mong Thuý Anh luôn gặp may mắn trong cuộc sống! 🍀", img: "a33.png",
-              finalWish: "Dù đi đến đâu hay làm điều gì, cũng luôn có những điều tốt đẹp chờ đón phía trước."
+            { wish: "Mong Thuý Anh luôn gặp nhiều may mắn và vui vẻ trong cuộc sống! 🍀", img: "a33.png",
+              finalWish: "Dù đi đến đâu hay làm điều gì, sẽ luôn có những điều tốt đẹp chờ đón phía trước."
             },
-            { wish: "Chúc Thuý Anh tuổi mới đạt được mọi ước mơ mong muốn! ✨", img: "a25.jpg",
-              finalWish: "Hãy mạnh dạn theo đuổi đam mê, vì Thuý Anh xứng đáng với những điều tuyệt vời nhất."
+            { wish: "Chúc Thuý Anh tuổi mới đạt được mọi ước mơ mình mong muốn! ✨", img: "a25.jpg",
+              finalWish: "Hãy mạnh dạn, tự tin theo đuổi với đam mê, vì Thuý Anh xứng đáng với những điều tuyệt vời nhất."
             },
             { wish: "Hãy luôn giữ nụ cười hồn nhiên này trên môi nhé! 😊", img: "a23.jpg",
               finalWish: "Bởi nụ cười của Thuý Anh chính là điều làm thế giới này trở nên dễ thương hơn."
@@ -1138,20 +1176,15 @@
         function startNewYearTypewriter() {
             const title = document.querySelector('.ny-title');
             const text = document.querySelector('.ny-text');
-            const titleText = '🎆 Chúc Mừng Năm Mới 2026 🎆';
-
+            const titleText = '🎆 Chúc Mừng Năm Mới Bính Ngọ 2026 🎆';
             const textContent =
-`Nhân dịp năm mới, chúc Thuý Anh cùng gia đình và những người thân yêu một năm mới
+`🌸Nhân dịp năm mới, chúc Thuý Anh cùng gia đình và những người thân yêu một năm mới:
 
 An Khang Thịnh Vượng - Vạn Sự Như Ý - Tỷ Sự Như Mơ
+Sức Khỏe Dồi Dào - Công Việc Thuận Lợi - Tấn Tài Tấn Lộc
+Gia Đình Ấm Áp - Hạnh Phúc - Tràn Ngập Tiếng Cười và May Mắn
 
-Sức Khỏe Dồi Dào - Công Việc Thuận Lợi - Gia Đình Hưng Thịnh
-
-Gia Đình Luôn Ấm Áp - Hạnh Phúc - Tràn Ngập Tiếng Cười và Nhiều Điều May Mắn
-
-Chúc Thuý Anh luôn giữ được tinh thần tích cực, công việc thuận lợi và cuộc sống ngày càng viên mãn.
-Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đầu tốt đẹp cho Thuý Anh cùng với Gia Đình🌸`;
-
+Năm mới đến sẽ có thật nhiều niềm vui và những khởi đầu tốt đẹp cho Thuý Anh cùng với Gia Đình. Và mong rằng chúng ta sẽ tiếp tục đồng hành và cùng nhau đạt thêm nhiều kết quả tốt đẹp trong công việc và cuộc sống nhé!🌸`;
             typeWriter(title, titleText, 80, () => typeWriter(text, textContent, isMobile ? 28 : 40));
         }
 
@@ -1196,11 +1229,13 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
             if (!title || !text || !emojis) return;
 
             emojis.style.opacity = '0';
-            const titleText = 'Cảm ơn bạn đã dành thời gian để xem hết! ❤️';
-            const textContent = 'Hy vọng bạn đã có những khoảnh khắc vui vẻ và ấm áp. Chúc bạn một ngày tuyệt vời!';
+            const titleText = 'Cảm ơn Thuý Anh vì đã dành thời gian đón nhận món quà nhỏ này ❤️';
+            const textContent = 'Dù chỉ là một món quà giản dị và có thể chưa thật sự hoàn hảo, Tín vẫn mong Thuý Anh sẽ đón nhận bằng tất cả sự chân thành. Nếu có điều gì chưa trọn vẹn, mong Thuý Anh thông cảm bỏ qua nhé. Hy vọng món quà này có thể khiến Thuý Anh vui hơn và không còn buồn như Tín đã hứa 🌸';
+            const textContent1 = 'Chúc Thuý Anh luôn gặp nhiều điều tốt đẹp, mỗi ngày đều ngập tràn niềm vui, sự ấm áp và năng lượng tích cực. Mong Thuý Anh luôn hạnh phúc và thành công trên con đường mình chọn 🌸';
+            const textContent2 = 'Vậy là Tín đã thực hiện được lời hứa tặng Thuý Anh 3/4 món quà kỷ niệm. Món quà cuối cùng, Tín hy vọng sẽ có cơ hội được tự tay trao đến Thuý Anh vào một dịp đặc biệt 🌸';
 
             typeWriter(title, titleText, 70, () => {
-                typeWriter(text, textContent, isMobile ? 30 : 45, () => {
+                typeWriter(text, textContent,textContent1,textContent2, isMobile ? 30 : 45, () => {
                     emojis.style.opacity = '1';
                     startThankYouFireworks();
                 });
@@ -1319,7 +1354,7 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                 createSparkles('stick-2');
             }, isMobile ? 90 : 60);
             // code đốt cháy pháo hoa
-            let count = 15;
+            let count = 1;
             const digitEl = document.getElementById('digit');
             digitEl.innerText = count;
 
@@ -1582,8 +1617,8 @@ Mong năm mới sẽ mang đến thật nhiều niềm vui và những khởi đ
                             });
                         }
 
-                        let startBeatingTime = Date.now() + 20000; // Delay beating by 15 seconds
-                        let startFreezeTime = Date.now() + 20000; // Delay freezing by 15 seconds
+                        let startBeatingTime = Date.now() + 15000; // Delay beating by 15 seconds
+                        let startFreezeTime = Date.now() + 15000; // Delay freezing by 15 seconds
 
                         function animateHeart() {
                             tTime += 0.01;
