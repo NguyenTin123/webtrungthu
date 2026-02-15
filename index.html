@@ -1040,6 +1040,36 @@
             .birthday-card { padding: 30px 40px; }
             .floating-photo-surprise { width: 80px; height: 80px; }
             .falling-photo { width: 110px; height: 110px; }
+            
+            /* Lixi Card Mobile Styles */
+            .lixi-card-inner {
+                padding: 25px 20px !important;
+                width: 95vw !important;
+                max-height: 85vh !important;
+                border-width: 5px !important;
+            }
+            .lixi-card-inner::before {
+                font-size: 3rem !important;
+                top: -35px !important;
+            }
+            .lixi-card-title {
+                font-size: 1.6rem !important;
+                margin-bottom: 15px !important;
+            }
+            .lixi-card-text {
+                font-size: 0.95rem !important;
+                line-height: 1.6 !important;
+                margin: 15px 0 !important;
+            }
+            .lixi-card-money {
+                font-size: 1.5rem !important;
+                margin: 15px 0 !important;
+            }
+            .lixi-close-btn {
+                padding: 10px 30px !important;
+                font-size: 1rem !important;
+                margin-top: 15px !important;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1638,10 +1668,10 @@ Năm mới đến sẽ có thật nhiều niềm vui và những khởi đầu t
             if (!title || !text || !emojis) return;
 
             emojis.style.opacity = '0';
-            const titleText = 'Cảm ơn Thuý Anh vì đã dành thời gian đón nhận món quà nhỏ này ❤️';
-            const textContent = 'Dù chỉ là món quà giản dị và chưa thật sự hoàn hảo, vẫn mong Thuý Anh sẽ đón nhận sự chân thành này. Nếu có gì chưa trọn vẹn, mong Thuý Anh thông cảm bỏ qua. Hy vọng món quà này có thể khiến Thuý Anh vui hơn và không còn buồn như Tín đã hứa 🌸';
-            const textContent1 = 'Chúc Thuý Anh luôn gặp nhiều điều tốt đẹp, mỗi ngày đều ngập tràn niềm vui, sự ấm áp và năng lượng tích cực.🌸';
-            const textContent2 = 'Vậy là Tín đã thực hiện được lời hứa tặng Thuý Anh 3/4 món quà kỷ niệm. Món quà cuối cùng, Tín hy vọng sẽ có cơ hội được tự tay trao đến Thuý Anh vào một dịp đặc biệt 🌸';
+            const titleText = 'Cảm ơn Thuý Anh đã dành thời gian để xem món quà nhỏ này ❤️';
+            const textContent = 'Dù chỉ là món quà giản dị, chưa thật sự hoàn hảo. Vẫn mong Thuý Anh đón nhận món quà này. Nếu có gì chưa trọn vẹn, Thuý Anh thông cảm bỏ qua. Hy vọng món quà này giúp Thuý Anh vui và không còn buồn🌸';
+            const textContent1 = 'Chúc Thuý Anh luôn gặp nhiều điều tốt đẹp, mỗi ngày đều ngập tràn niềm vui và năng lượng tích cực.🌸';
+            const textContent2 = 'Tín đã giữ lời hứa tặng Thuý Anh 3/4 món quà kỷ niệm. Món quà cuối cùng, Tín hy vọng sẽ có cơ hội được tự tay trao đến Thuý Anh vào một dịp đặc biệt 🌸';
 
             typeWriter(title, titleText, 70, () => {
                 typeWriter(text, textContent,textContent1,textContent2, isMobile ? 30 : 45, () => {
